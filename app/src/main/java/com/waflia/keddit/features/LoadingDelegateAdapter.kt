@@ -1,11 +1,11 @@
-package features
+package com.waflia.keddit.features
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.waflia.keddit.R
-import commons.adapter.ViewType
-import commons.adapter.ViewTypeDelegateAdapter
-import commons.inflate
+import com.waflia.keddit.commons.adapter.ViewType
+import com.waflia.keddit.commons.adapter.ViewTypeDelegateAdapter
+import com.waflia.keddit.commons.extensions.inflate
 
 class LoadingDelegateAdapter: ViewTypeDelegateAdapter {
 

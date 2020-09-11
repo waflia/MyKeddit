@@ -1,4 +1,4 @@
-package features
+package com.waflia.keddit.features
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.waflia.keddit.R
-import commons.inflate
+import com.waflia.keddit.commons.RedditNewsItem
+import com.waflia.keddit.commons.extensions.inflate
 import kotlinx.android.synthetic.main.news_fragment.*
 
 
@@ -35,6 +35,21 @@ class NewsFragment: Fragment(){
         news_list.layoutManager = LinearLayoutManager(context)
 
         initAdapter()
+
+        if (savedInstanceState == null){
+            val news = mutableListOf<RedditNewsItem>()
+            for(i in 1..10){
+                news.add(RedditNewsItem(
+                        "author $i",
+                        "Title $i",
+                        i,
+                        1457207701L - i * 200,
+                        "https://picsum.photos/200/200&image=$i",
+                        "url"
+                ))
+            }
+            (news_list.adapter as NewsAdapter).addNews(news)
+        }
     }
 
     private fun initAdapter(){

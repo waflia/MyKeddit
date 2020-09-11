@@ -1,4 +1,4 @@
-package commons.adapter
+package com.waflia.keddit.commons.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView

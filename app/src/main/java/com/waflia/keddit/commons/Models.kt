@@ -1,7 +1,7 @@
-package commons
+package com.waflia.keddit.commons
 
-import commons.adapter.AdapterConstants
-import commons.adapter.ViewType
+import com.waflia.keddit.commons.adapter.AdapterConstants
+import com.waflia.keddit.commons.adapter.ViewType
 
 data class RedditNewsItem(
         val author: String,

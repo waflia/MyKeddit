@@ -1,4 +1,4 @@
-package commons.adapter
+package com.waflia.keddit.commons.adapter
 
 object AdapterConstants{
     val NEWS = 1

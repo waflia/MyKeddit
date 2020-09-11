@@ -1,11 +1,13 @@
-package features
+package com.waflia.keddit.features
 
 import android.view.ViewGroup
 import androidx.collection.SparseArrayCompat
 import androidx.recyclerview.widget.RecyclerView
-import commons.adapter.AdapterConstants
-import commons.adapter.ViewType
-import commons.adapter.ViewTypeDelegateAdapter
+import com.waflia.keddit.commons.RedditNewsItem
+import com.waflia.keddit.commons.adapter.AdapterConstants
+import com.waflia.keddit.commons.adapter.NewsDelegateAdapter
+import com.waflia.keddit.commons.adapter.ViewType
+import com.waflia.keddit.commons.adapter.ViewTypeDelegateAdapter
 import java.util.ArrayList
 
 class NewsAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -18,6 +20,7 @@ class NewsAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     init {
         delegateAdapters.put(AdapterConstants.LOADING, LoadingDelegateAdapter())
+        delegateAdapters.put(AdapterConstants.NEWS, NewsDelegateAdapter())
         items = ArrayList()
         items.add(loadingItem)
     }
@@ -37,4 +40,29 @@ class NewsAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun getItemViewType(position: Int): Int {
         return this.items.get(position).getViewType()
     }
+
+    fun addNews(news: List<RedditNewsItem>){
+        val initPosition = items.size - 1
+        items.removeAt(initPosition)
+        notifyItemRemoved(initPosition)
+        items.addAll(news)
+        items.add(loadingItem)
+        notifyItemRangeChanged(initPosition, items.size + 1)
+    }
+
+    fun clearAndAddNews(news: List<RedditNewsItem>){
+        items.clear()
+        notifyItemRangeRemoved(0, getLastPosition())
+
+        items.addAll(news)
+        items.add(loadingItem)
+        notifyItemRangeInserted(0, items.size)
+    }
+
+    fun getNews(): List<RedditNewsItem>{
+        return items.filter { it.getViewType() == AdapterConstants.NEWS}
+                .map { it as RedditNewsItem }
+    }
+
+    private fun getLastPosition() = if (items.lastIndex == -1) 0 else items.lastIndex
 }
