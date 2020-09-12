@@ -1,11 +1,11 @@
 package com.waflia.keddit.features
 
 import com.waflia.keddit.commons.RedditNewsItem
-import io.reactivex.rxjava3.core.Observable
+import io.reactivex.Observable
 
 class NewsManager(){
 
-    fun getNews(): Observable<List<RedditNewsItem>>{
+    fun getNews(): Observable<List<RedditNewsItem>> {
         return Observable.create{
             subscriber ->
             val news = mutableListOf<RedditNewsItem>()

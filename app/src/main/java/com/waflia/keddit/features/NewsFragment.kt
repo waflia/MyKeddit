@@ -1,25 +1,25 @@
 package com.waflia.keddit.features
 
-import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.waflia.keddit.R
-import com.waflia.keddit.commons.RedditNewsItem
+import com.waflia.keddit.commons.RxBaseFragment
 import com.waflia.keddit.commons.extensions.inflate
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.news_fragment.*
 
 
-class NewsFragment: Fragment(){
+class NewsFragment: RxBaseFragment(){
 
-    //private var newsList: RecyclerView? = null
-//    private val newsList by lazy {
-//        news_list
-//    }
-    private val NewsManager by lazy{NewsManager()}
+    var subscription:Disposable? = null
+    private val newsManager by lazy{NewsManager()}
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -30,8 +30,7 @@ class NewsFragment: Fragment(){
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-//        newsList.setHasFixedSize(true)
-////        newsList.layoutManager = LinearLayoutManager(context)
+
         news_list.setHasFixedSize(true)
         news_list.layoutManager = LinearLayoutManager(context)
 
@@ -43,6 +42,30 @@ class NewsFragment: Fragment(){
     }
 
     private fun requestNews() {
+        subscription = newsManager.getNews()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        { retrievedNews ->
+                            (news_list.adapter as NewsAdapter).addNews(retrievedNews)
+                        },
+                        { e ->
+                            Snackbar.make(news_list, e.message ?: "", Snackbar.LENGTH_LONG).show()
+                        }
+                )
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if(!(subscription?.isDisposed?:false)){
+            subscription!!.dispose()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+
     }
 
     private fun initAdapter(){
