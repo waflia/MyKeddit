@@ -1,5 +1,6 @@
 package com.waflia.keddit.features
 
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +19,7 @@ class NewsFragment: Fragment(){
 //    private val newsList by lazy {
 //        news_list
 //    }
-
+    private val NewsManager by lazy{NewsManager()}
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,20 +37,12 @@ class NewsFragment: Fragment(){
 
         initAdapter()
 
-        if (savedInstanceState == null){
-            val news = mutableListOf<RedditNewsItem>()
-            for(i in 1..10){
-                news.add(RedditNewsItem(
-                        "author $i",
-                        "Title $i",
-                        i,
-                        1457207701L - i * 200,
-                        "https://picsum.photos/200/200&image=$i",
-                        "url"
-                ))
-            }
-            (news_list.adapter as NewsAdapter).addNews(news)
+        if(savedInstanceState == null){
+            requestNews()
         }
+    }
+
+    private fun requestNews() {
     }
 
     private fun initAdapter(){
