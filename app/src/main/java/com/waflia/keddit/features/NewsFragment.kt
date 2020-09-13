@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.waflia.keddit.R
+import com.waflia.keddit.commons.InfiniteScrollListener
+import com.waflia.keddit.commons.RedditNews
 import com.waflia.keddit.commons.RxBaseFragment
 import com.waflia.keddit.commons.extensions.inflate
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -18,6 +20,7 @@ import kotlinx.android.synthetic.main.news_fragment.*
 class NewsFragment: RxBaseFragment(){
 
     var subscription:Disposable? = null
+    private var redditNews: RedditNews? = null
     private val newsManager by lazy{NewsManager()}
 
     override fun onCreateView(
@@ -32,7 +35,11 @@ class NewsFragment: RxBaseFragment(){
         super.onActivityCreated(savedInstanceState)
 
         news_list.setHasFixedSize(true)
-        news_list.layoutManager = LinearLayoutManager(context)
+        //news_list.layoutManager = LinearLayoutManager(context)
+        val linearLayout = LinearLayoutManager(context)
+        news_list.layoutManager = linearLayout
+        news_list.clearOnScrollListeners()
+        news_list.addOnScrollListener(InfiniteScrollListener({requestNews()}, linearLayout))
 
         initAdapter()
 
@@ -42,12 +49,14 @@ class NewsFragment: RxBaseFragment(){
     }
 
     private fun requestNews() {
-        subscription = newsManager.getNews()
+        subscription = newsManager.getNews(redditNews?.after ?: "")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { retrievedNews ->
-                            (news_list.adapter as NewsAdapter).addNews(retrievedNews)
+
+                            redditNews = retrievedNews
+                            (news_list.adapter as NewsAdapter).addNews(retrievedNews.news)
                         },
                         { e ->
                             Snackbar.make(news_list, e.message ?: "", Snackbar.LENGTH_LONG).show()
