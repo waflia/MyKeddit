@@ -31,6 +31,8 @@ android {
     }
 }
 
+repositories { jcenter() }
+
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -48,6 +50,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
 
     testImplementation 'junit:junit:4.13'
+    testImplementation "org.mockito:mockito-core:3.5.10"
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 

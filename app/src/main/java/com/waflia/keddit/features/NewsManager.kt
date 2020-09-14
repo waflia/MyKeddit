@@ -1,11 +1,12 @@
 package com.waflia.keddit.features
 
-import com.waflia.keddit.api.RestAPI
+import com.waflia.keddit.api.NewsAPI
+import com.waflia.keddit.api.NewsRestAPI
 import com.waflia.keddit.commons.RedditNews
 import com.waflia.keddit.commons.RedditNewsItem
 import io.reactivex.Observable
 
-class NewsManager(private val api:RestAPI = RestAPI()){
+class NewsManager(private val api: NewsAPI = NewsRestAPI()){
 
     fun getNews(after: String, limit:String = "10"): Observable<RedditNews> {
         return Observable.create{
