@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 28
@@ -31,7 +32,17 @@ android {
     }
 }
 
-repositories { jcenter() }
+kapt{
+    generateStubs = true
+}
+
+repositories {
+    jcenter()
+    maven(){
+        url "https://dl.bintray.com/spekframework/spek/"
+        }
+    maven { url "http://repository.jetbrains.com/all" }
+}
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
@@ -48,6 +59,18 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.0'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
+
+    api 'com.google.dagger:dagger:2.29.1'
+    kapt 'com.google.dagger:dagger-compiler:2.29.1'
+    //api 'com.google.dagger:dagger:2.4'
+    //kapt 'com.google.dagger:dagger-compiler:2.4'
+    //compileOnly 'org.glassfish:javax.annotation:10.0-b28'
+
+//    testImplementation "org.spekframework.spek2:spek-dsl-jvm:2.0.13"
+//    testImplementation "org.spekframework.spek2:spek-runner-junit5:2.0.13"
+    testImplementation 'org.jetbrains.spek:spek-api:1.2.0'
+    testImplementation 'org.jetbrains.spek:spek-junit-platform-engine:1.2.0'
+    testImplementation 'org.junit.platform:junit-platform-runner:1.0.1'
 
     testImplementation 'junit:junit:4.13'
     testImplementation "org.mockito:mockito-core:3.5.10"

@@ -5,8 +5,12 @@ import com.waflia.keddit.api.NewsRestAPI
 import com.waflia.keddit.commons.RedditNews
 import com.waflia.keddit.commons.RedditNewsItem
 import io.reactivex.Observable
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class NewsManager(private val api: NewsAPI = NewsRestAPI()){
+
+@Singleton
+class NewsManager @Inject constructor(private val api: NewsAPI){
 
     fun getNews(after: String, limit:String = "10"): Observable<RedditNews> {
         return Observable.create{

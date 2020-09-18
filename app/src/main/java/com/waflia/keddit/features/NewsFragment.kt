@@ -6,25 +6,34 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import com.waflia.keddit.KedditApp
 import com.waflia.keddit.R
 import com.waflia.keddit.commons.InfiniteScrollListener
 import com.waflia.keddit.commons.RedditNews
 import com.waflia.keddit.commons.RxBaseFragment
 import com.waflia.keddit.commons.extensions.inflate
+import com.waflia.keddit.di.DaggerNewsComponent
+import com.waflia.keddit.di.NewsComponent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.news_fragment.*
+import javax.inject.Inject
 
 
 class NewsFragment: RxBaseFragment(){
 
+    @Inject lateinit var newsManager: NewsManager
     var subscription:Disposable? = null
     private var redditNews: RedditNews? = null
-    private val newsManager by lazy{NewsManager()}
 
     companion object{
         private val KEY_REDDIT_NEWS = "redditNews"
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        DaggerNewsComponent.create().inject(this)
     }
 
     override fun onCreateView(
@@ -85,12 +94,6 @@ class NewsFragment: RxBaseFragment(){
         if(!(subscription?.isDisposed?:false)){
             subscription?.dispose()
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-
     }
 
     private fun initAdapter(){
